@@ -6,7 +6,6 @@
  * */
 @IsTest
 public class JPath_Test {
-
     @IsTest
     public static void SelectSingleElementFromTheRootReturnsIt(){
         object result = JPath.get('{"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}}', '/results');
@@ -131,6 +130,15 @@ public class JPath_Test {
     public static void SelectSingleElementChildOfTheRootDoesNotReturnsIt(){
          object result = JPath.get('{"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}}', '/results/another');
        
+        system.assert(result == null,'Should not return');
+      
+    }
+    
+    
+    @IsTest
+    public static void SelectSingleElementChildOfTheRootDoesNotReturnsTooIt(){
+         object result = JPath.get('{"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}}', '/results[0]');
+   
         system.assert(result == null,'Should not return');
       
     }
