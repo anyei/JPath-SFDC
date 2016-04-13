@@ -12,6 +12,9 @@ Still under development. Will post example on how to use it later.
        src="https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/src/main/webapp/resources/img/deploy.png">
 </a>
 
+##### Manual
+
+You may manually create the class within your org and copy paste the content of JPath class as for the JPath_Test. 
 
 ### Issues
 Please refer to the <a href="https://github.com/anyei/JPath-SFDC/issues">Issues</a> section.
