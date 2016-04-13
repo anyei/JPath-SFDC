@@ -1,5 +1,5 @@
 # JPath-SFDC
-Query json data made simple.
+Query json data made simple in salesforce using apex.
 
 ### Install
 
