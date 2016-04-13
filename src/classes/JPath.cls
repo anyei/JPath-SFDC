@@ -59,8 +59,17 @@ public class JPath {
                 List<object> tmpd = (List<object>)data;
                 if(tmpd.size() > 0 && positionPredicate > 0 && tmpd.size() >= positionPredicate)
                 data = tmpd[positionPredicate - 1];
+                else
+                    data = null;
+            }else if(applyPredicate)
+            {
+                data = null;
             }
         }
+        
+        system.debug('back ' + toSearchToCompareBack);
+        system.debug('processing ' + processingPath);
+        system.debug('data '+data);
         
         if( (!processingPath.contains('/') && (!processingPath.contains('[') && processingPath == toSearch ) ) || toSearchToCompareBack == processingPath ) 
             return data;
@@ -111,9 +120,13 @@ public class JPath {
                         List<object> tmpd = (List<object>)data;
                         if(tmpd.size() > 0 && positionPredicate > 0 && tmpd.size() >= positionPredicate)
                         data = tmpd[positionPredicate - 1];
+                        else 
+                            data = null;
                         if(toSearchToCompareBack == processingPath)
                             return data;
                         
+                    }else if(applyPredicate){
+                        data = null;
                     }
                            
                            
