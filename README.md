@@ -73,14 +73,25 @@ Returns an object type. The only parameter is the string of the path to the desi
 ##### Static Methods
 
 ###### get
-Returns an object type. It expect two parameters, the first one is the json data as a string and the second is the string of the path to the desired property to search in the json.
+Returns an object type which is the resulting value from the selection.
+###### rawJson
+Type of string, Raw json data.
+###### path
+Type of string, the well formed path or selector to get the json from the rawJson.
 
 ```sh
  string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
         
          object result = JPath.get(rawJson, '/results');
   ```
-  
+
+#### JPath Supported Selectors
+| JPath Selectors Types | Usage | Description |
+|:---------------------:|:------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------------------:|
+| property | /propertyName or /propertyName/AnotherProperty | Gets any value from the propertyName in any json record of the current path |
+| index predicate | /[1] or /propertyName[1] or  /propertyName[3]/[4] or /propertyName/[4]/someMore/[1]  and so on.. | It is not zero based index, 1 means first record. Gets only a single element from the specific path of the json record.  |
+|  |  |  |
+
 ### Issues
 Please refer to the <a href="https://github.com/anyei/JPath-SFDC/issues">Issues</a> section.
 
