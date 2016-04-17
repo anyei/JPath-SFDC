@@ -62,22 +62,6 @@ public class JPath {
                             system.debug('found object by name in list '+omap.get(context.toSearch));
                             tmpFoundObjects.add(omap.get(context.toSearch));
                         }
-                    }else if(islist(o)){
-                        list<object> olist = (list<object>) o;
-                        object jo = null;
-                        for(integer j = 0;j<olist.size(); j++){
-                            jo = olist[j];
-                            if(ismap(jo)){
-                                system.debug('is a map ' + o);
-                                Map<string,object> omap = (Map<string,object>)jo;
-                                
-                                if(omap.containsKey(context.toSearch)){                            
-                                  
-                                    system.debug('found object by name in list '+omap.get(context.toSearch));
-                                    tmpFoundObjects.add(omap.get(context.toSearch));
-                                } 
-                            }
-                        }
                     }
                 }                
              
@@ -101,8 +85,9 @@ public class JPath {
                     
                     if(context.applyPredicate != true)
                         context.foundPaths.add(context.toSearch);
-                    
+                    if(tmpR.size() > 1)
                     context.data = tmpR;
+                    else context.data = tmpR[0];
                 }else context.data = null;
                         
             }
