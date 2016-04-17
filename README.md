@@ -63,8 +63,14 @@ In this example, the values "Avalue" and "Avalued" are selected, both values wer
 #### JPath Class  
 ##### Instance Methods
 ###### get
-Returns an object type. The only parameter is the string of the path to the desired property.
+Returns an object type which is the resulting value from the selection.
 
+###### arguments
+**path**
+Type of string, the well formed path or selector to get the json from the rawJson.
+
+
+###### Example
 ```sh
  JPath jpathExec = new JPath(rawJson);
           
@@ -74,11 +80,14 @@ Returns an object type. The only parameter is the string of the path to the desi
 
 ###### get
 Returns an object type which is the resulting value from the selection.
-###### rawJson
+
+###### arguments
+**rawJson**
 Type of string, Raw json data.
-###### path
+**path**
 Type of string, the well formed path or selector to get the json from the rawJson.
 
+###### Example
 ```sh
  string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
         
