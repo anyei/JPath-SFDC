@@ -1,341 +1,286 @@
 /*
- * Author: Angel Robles
- * Created Date: 4/12/2016
- * Purpose : Use xpath type of expressions in order to select json nodes.
-*/
-public class JPath {
-    string rawJson;    
-   
-    //Constructor
-    public JPath(string json){
-        rawJson = json;
+ * Author : Angel Robles
+ * Apex Class Tested: JPath
+ * Purpose: Unit testing for JPath apex class. Should contain all the supported scenarios.
+ * 
+ * */
+@IsTest
+public class JPath_Test {
+ 
+  
+    @IsTest
+      public static void SelectMultipleInstancePropertyNoPredicateRootArrayInstance(){
+          string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple","Red Apple","yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
+        
+          JPath jpathExec = new JPath(rawJson);
+          
+          object result = jpathExec.get('/results/aField');
+      
+          system.assert(result instanceof List<object>,'should be a list ' + result);
+      
+          List<object> results = (List<object>)result;
+          
+          system.assert(results != null && results.size() == 2 && results[1] == 'aValued' ,'Should bring 2 result ' + results + ' '+ results.size());
+          
+          
     }
     
-    //Instance get method
-    public object get(string xpath){
-        return get(rawJson, xpath);
+    
+    @IsTest
+      public static void SelectMultiplePropertyNoPredicateRootArray(){
+          string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple","Red Apple","yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
+        
+          object result = JPath.get(rawJson, '/results/aField');
+      
+          system.assert(result instanceof List<object>,'should be a list ' + result);
+      
+          List<object> results = (List<object>)result;
+          
+        system.assert(results != null && results.size() == 2 && results[1] == 'aValued' ,'Should bring 2 result ' + results + ' '+ results.size());
+          
+          
     }
-    static boolean searchComplete(JPathContext context, string path){
-        string sr = '';
-            for(string s : context.foundPaths)                
-                sr +='/'+ s;
-        if(sr == '')
-            context.data = null;
-        system.debug(sr + ' and the path '+ path);
-        return sr.removeStart('/') == path.removeStart('/');
+    
+     @IsTest
+      public static void SelectSinglePropertyPredicateIndexRootArray(){
+          string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple","Red Apple","yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
+        
+        object result = JPath.get(rawJson, '/results/listOfFruits[2]');
+      
+          system.assert(result instanceof string,'should be a string ' + result);
+      
+        system.assert(result != null && result == 'green apple' ,'Should bring 1 result ' + result);
+          
+          
     }
-    static void processList(JPathCOntext context, object untypedObjectThatWeKnowIsAList){
-		//attribute search or soemthing like that @name = "algo"
-        /*for(integer i = 0;i<listData.size();i++){
-            if(listData[i])
-        }*/
-        //
-        if(context.applyPredicate){
-            context.data = untypedObjectThatWeKnowIsAList;
-            applyRootPredicateForList(context);
-        }else{
-            
-            context.applyPredicate = false;
-            context.positionPredicate = 0;
-            
-            //remove the predicate in case it has
-            evalPredicate(context,false);
-            
-            system.debug('value to search starting with a name after removing the predicate ' +context.toSearch);
-            
-            List<object> tmpd = (list<object>)untypedObjectThatWeKnowIsAList;
-            system.debug(tmpd + ' list of results ');
-            if(tmpd.size() > 0) {
-                object o =null;
-                list<object> tmpFoundObjects = new list<object>();
-                for(integer i =0;i<tmpd.size(); i++){
-                    o = tmpd[i];
-                    
-                    system.debug(o + ' object to check ');
-                    //looking for specific column values within the list items
-                    if(ismap(o)){
-                       system.debug('is a map ' + o);
-                        Map<string,object> omap = (Map<string,object>)o;
-                        
-                        if(omap.containsKey(context.toSearch)){                            
-                            
-                            system.debug('found object by name in list '+omap.get(context.toSearch));
-                            tmpFoundObjects.add(omap.get(context.toSearch));
-                        }
-                    }else if(islist(o)){
-                        list<object> olist = (list<object>) o;
-                        object jo = null;
-                        for(integer j = 0;j<olist.size(); j++){
-                            jo = olist[j];
-                            if(ismap(jo)){
-                                system.debug('is a map ' + o);
-                                Map<string,object> omap = (Map<string,object>)jo;
-                                
-                                if(omap.containsKey(context.toSearch)){                            
-                                  
-                                    system.debug('found object by name in list '+omap.get(context.toSearch));
-                                    tmpFoundObjects.add(omap.get(context.toSearch));
-                                } 
-                            }
-                        }
-                    }
-                }                
-             
-                
-                system.debug('data found ' + tmpFoundObjects);
-                system.debug('apply predicate '+context.ApplyPredicate);
-                system.debug('predicate position '+ context.positionPredicate);
-                
-                if(tmpFoundObjects.size() > 0){
-                    List<object> tmpR = new List<object>();
-                    for(integer i  =0;i<tmpFoundObjects.size(); i ++){
-                        context.data = tmpFoundObjects[i];
-                        
-                        if(context.applyPredicate)
-                			applyRootPredicateForList(context);
-                        
-                        if(context.data != null)
-                            tmpR.add(context.data);
-                        
-                    }
-                    
-                    if(context.applyPredicate != true)
-                        context.foundPaths.add(context.toSearch);
-                    
-                    context.data = tmpR;
-                }else context.data = null;
-                        
-            }
-        }
+    
+     @IsTest
+      public static void SelectSingleElementByUsingPredicateIndexesInEveryPathArray(){
+          string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple","Red Apple","yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
         
-        
+        object result = JPath.get(rawJson, '/results[3]/listOfFruits[2]');
+      
+          system.assert(result instanceof string,'should be a string');
+          
+        system.assert(result != null && result == 'green apple' ,'Should bring 1 result ' + result );
+          
+          
     }
-    static void processMap(JPathContext context, Map<string,object> mapData){
-        system.debug('toSearch in processmap '+ context.toSearch);
-        if(mapData.containsKey(context.toSearch)){
-            
-            context.data = mapData.get(context.toSearch);
-           system.debug('applyPredicate ' + context.applyPredicate);
-            system.debug('predicateToSearch ' + context.predicateToSearch);
-            system.debug('prediate position ' + context.positionPredicate);
-            if(context.applyPredicate)
-            {               
-               applyRootPredicateForList(context);                      
-            }else
-                context.foundPaths.add(context.toSearch);
-        }else
-        context.data = null;
+    
+    
+    @IsTest
+      public static void SelectSingleElementUsingIndexPredicateOnePathRootArray(){
+          string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"aField":"moreValues"}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
+        
+        object result = JPath.get(rawJson, '/results[3]');
+          
+          system.assert(result instanceof map<string,object>,'should be a map');
+          
+          map<string,object> finalResult = (map<string,object>) result;
+          
+        system.assert(finalResult != null && finalResult.size() == 1 && finalResult.containsKey('aField') && finalResult.get('aField') == 'moreValues' ,'Should bring 1 result ' + finalResult + ' '+ finalResult.size());
+          
+          
     }
-    static void applyRootPredicateForList(JPathContext context){
-         List<object> tmpd = new list<object>();
-        if(context.data instanceof list<object> ) {
-            tmpd = (List<object>)context.data;
-            system.debug('its a list for index calculation');
-            system.debug('data ' + context.data);
-            system.debug(tmpd.size());
-            system.debug(tmpd[0]);
-            system.debug(context.positionPredicate);
-            
-        }
+    
+    
+     
+     @IsTest
+      public static void SelectMultipleElementsOnePathNoPredicateRootArray(){
+         string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
         
-        system.debug('search context apply predicate '+context.toSearch);
-        
-        string fpath ='';
-        if(context.toSearch != context.predicateToSearch)//'['+context.positionPredicate+']')
-            fpath = context.toSearch +context.predicateToSearch;//+ '['+context.positionPredicate+']';
-        else fpath = context.predicateToSearch; //'['+context.positionPredicate+']';
-        
-        system.debug('fpath ' + fpath);
-        
-        //for now only index predicate is supported
-        //the plan is to support more types of predicates
-        if(tmpd.size() > 0 && context.positionPredicate > 0 && tmpd.size() >= context.positionPredicate){
-            context.data = tmpd[context.positionPredicate - 1];
-             system.debug('data after getting index '+ context.data);       
-            if(context.foundPaths.size() == 0)
-                context.foundPaths.add(fpath); 
-            else if(context.foundPaths.size() > 0 && context.foundPaths[context.foundPaths.size() - 1] != fpath)
-                context.foundPaths.add(fpath); 
-        }
-        else{context.data = null;}
-
+         object result = JPath.get(rawJson, '/results');
+      
+         system.assert(result instanceof List<object>,'should be a list');
+      
+         List<object> results = (List<object>)result;
+          
+         system.assert(results != null && results.size() == 2 ,'Should bring 2 results '+ results.size());
+          
+          
     }
-    static void evalPredicate(JPathContext context, boolean startOrEnd){
+    
+    
+    
+     
+    @IsTest
+      public static void MultipleElementsUsingAttributeNamePredicateRootIsAList(){
+          string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
         
-        context.predicateToSearch = '';
-        
-        //if(context.toSearch == null)
-            context.toSearch = context.processingPath;
-        
-         if ( context.applyPredicate = (context.toSearch.contains('[') && context.toSearch.contains(']') )  ){
-            
-             string toRemove = context.toSearch.substringBetween('[', ']');             
-             context.predicateToSearch = '['+toRemove+']';
-            try{
-               
-                context.positionPredicate =integer.valueof(toRemove);
-            }catch(Exception err){}
-            
-            context.toSearch = (startOrEnd == true ?  context.toSearch.removeStart('['+toRemove+']') :  context.toSearch.removeEnd('['+toRemove+']') ) ;
-             
-        }
-        
-        system.debug('tosearch from evalpredicate '+ context.toSearch);
-        
-    }
-    static void eval(JPathContext context, string pathToProcess, boolean isAList){
-           
-         context.applyPredicate = false;
-            context.positionPredicate = 0;
-       
-            context.processingPath = pathToProcess;
-            
-            system.debug('processing from eval '+context.processingPath);
-            if(context.processingPath.startsWith('[') && isAList==true)
-            	evalPredicate(context,true);
-        	else if(isAList != true)
-                evalPredicate(context,false);
-        	
-            /*if(context.processingPath.contains('/') ){
-           		context.toSearch= context.processingPath.substring(0,context.processingPath.indexOf('/'));
-            
-             system.debug('to search = '+ context.tosearch);
-           
-            context.processingPath = context.processingPath.substring(context.toSearch.length() + 1,context.processingPath.length());
-        	} 
-            else
-                context.toSearch = context.processingPath;*/
-  
-       
-        
-    }
-    static void compileQuery(JPathContext context, object untypedJson){
-        object dataToWork = (untypedJson == null) ? context.data : untypedJson;
-        context.cleanSearches();
-         if(isMap(dataToWork)){
-            eval(context, context.popPath(), false);
-             system.debug(context.transPaths);
-             system.debug('target paths '+context.targetPaths);
-            system.debug('is a map for the first time');
-             system.debug('to search before removing the starting predicates '+context.toSearch);
-             Map<String, Object> rootMap = (Map<String, Object>) dataToWork;
-            processMap(context, rootMap);
-            
-        }else if (isList(dataToWork)){            
-            eval(context, context.popPath(), true);
-            system.debug(context.transPaths);
-            system.debug('is a list for the first time');  
-            system.debug('to search before removing the starting predicates '+context.toSearch);
-            system.debug(context.foundPaths);
-            string sr = '';
-            for(string s : context.foundPaths)
-                sr += s;
-            system.debug(sr);
-            processList(context, dataToWork);
-        }
-    }
-    //static get method
-    public static object get(string rawJson, string path){
-        JPathContext context = new JPathContext(path);
-        
-        object untypedJson = JSON.deserializeUntyped(rawJson);  
-        
-        system.debug(context.data);
-        if(context.targetPaths != null && context.targetPaths.size() > 0)
-            for(integer i =1;i<1000; i++){  
-                
-                 system.debug('initial path = ' + context.processingPath);        
-                system.debug('nextPath = '+context.toSearch);
-                 
-                compileQuery(context, ((i==1) ?untypedJson:null) );  
-                
-                system.debug('processing ' + context.processingPath);
-                system.debug('data '+context.data);
-                
-                if(searchComplete(context,path) || context.targetPaths.size() <= i){
-                    system.debug('break!');
-                    system.debug('targetPaths '+ context.transPaths);
-                    system.debug('i '+i);
-                 break;
-                    
-                }
-             
-            } 
-        
-        return context.data;
+        object result = JPath.get(rawJson, '/second');
+      
+        system.assert(result instanceof List<object>,'should be a list');
+      
+          List<object> results = (List<object>)result;
+        system.assert(results != null && results.size() == 4 ,'Should bring 4 results');
+          
+          
     } 
-    
-    public static boolean isMap(object o){
-        return o instanceof map<string,object>;
+   
+ 
+    @IsTest
+      public static void SelectSingleElementUsingAttributeNamePredicateRootIsAList(){
+          string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}},{"second":"object"},{"third":"objectx"} ]';
+        
+        object result = JPath.get(rawJson, '/second');
+      
+        system.assert(result instanceof string,'should be a string');
+      
+        system.assert(result != null && result == 'object','Should bring "object" as result');
+          
+          
     }
-    public static boolean isList(object o){
-        return o instanceof list<object>;
-      }
+   
+  @IsTest
+      public static void SelectSingleElementUsingIndexPredicateRootIsAList(){
+          string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}},{"second":"object"},{"third":"object"} ]';
+        
+        object result = JPath.get(rawJson, '/[2]');
+      
+        system.assert(result instanceof map<string,object>,'should be a map');
+        
+        map<string,object> resultingObject = (map<string,object>)result;  
+          
+        system.assert(resultingObject != null && resultingObject.containsKey('second') && resultingObject.get('second') == 'object','Should bring second item from the root array');
+    }   
+    @IsTest
+    public static void SelectSingleElementFromTheRootReturnsIt(){
+        string rawJson = '{"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}}';
+        
+        object result = JPath.get(rawJson, '/results');
+        
+        system.assert(result != null,'Should bring something');
+    }
+   
+    @IsTest
+    public static void SelectSingleElementSecondInTheRootReturnsIt(){
+		string rawJson = '{"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}}';
+
+        object result = JPath.get(rawJson, '/another');
+       
+        system.assert(result instanceof map<string,object>,'should be a map');
+            
+        Map<string,object> resultFromAnother = (Map<string,object>)result;
+        
+        system.assert(resultFromAnother != null && resultFromAnother.containsKey('somef') && resultFromAnother.get('somef') == 'somed','Should have brough "another" json element');
+        
+    }
+    @IsTest
+    public static void SelectSingleElementChildOfARootReturnsIt(){
+        object result = JPath.get('{"results":{"SecondResults":{"thirdResult":{"aFieldx":"aValueY"}}},"more":{"aField":"Avalue"},"another":{"somef":"somed"}}', '/results/SecondResults/thirdResult');
+       
+        system.assert(result instanceof map<string,object>,'should be a map');
+            
+        Map<string,object> resultFromAnother = (Map<string,object>)result;
+        
+        system.assert(resultFromAnother != null && resultFromAnother.containsKey('aFieldx') && resultFromAnother.get('aFieldx') == 'aValueY','Should have brough "thirdResult" json element');
+        
+    }
+    
+    @IsTest
+    public static void SelectMultipleElementsChildOfARootReturnsThem(){
+        object result = JPath.get('{"results":{"SecondResults":{"thirdResult":[{"somex":"somey"},{"somex":"somey"},{"somex":"somey"},{"somex":"somey"}]}},"more":{"aField":"Avalue"},"another":{"somef":"somed"}}', '/results/SecondResults/thirdResult');
+       
+        system.assert(result instanceof list<object>,'should be a list');
+            
+        list<object> resultFromAnother = (list<object>)result;
+        
+        system.assert(resultFromAnother != null && resultFromAnother.size() ==4,'Should have brough "thirdResult" json element');
+        
+    }
+    
+    @IsTest
+    public static void SelectMixedElementsChildOfSelectedIndexReturns(){
+        string rawJson = '{"results":[{"somex":"somey"},{"somem":{"aroute":[{"you":"think"},{"what":"do"},{"crazy":{"name":"value"}},{"is":"anja"},{"this":"yup"}],"asecond":{"athird":"route"}}},{"somer":"somes"},{"somex":"somey"}],"blablabla":{"moreproperty":"totest"} }';
+        object result = JPath.get(rawJson, '/results[2]/somem/asecond');
+       
+        system.assert(result instanceof map<string,object>,'should be a map');
+            
+        map<string,object> resultFromAnother = (map<string,object>)result;//[{"if":"wecan"},{"lets":"see"},{"the":"value"}]
+        
+        system.assert(resultFromAnother != null && resultFromAnother.containsKey('athird') && resultFromAnother.get('athird')=='route','Should have brough "asecond" which is a child element of the second element of the "results" parent');
+                
+        
+        result = JPath.get(rawJson, '/results[2]/somem/aroute[3]/crazy');
+      
+        system.assert(result instanceof map<string,object>,'should be a map');
+            
+        resultFromAnother = (map<string,object>)result;
+        
+        system.assert(resultFromAnother != null && resultFromAnother.containsKey('name') && resultFromAnother.get('name')=='value','Should have brough third element of the "results" parent');
+        
+        
+        result = JPath.get(rawJson, '/results[2]/somem/aroute');
+      
+        system.assert(result instanceof list<object>,'should be a list');
+            
+        List<object> listResult = (list<object>)result;
+        
+        system.assert(listResult != null && listResult.size() == 5 ,'Should have brough 5 elements');
+        
+    }
+    
+    @IsTest
+    public static void SelectFirstSecondAndThirdElementShouldReturnIt(){
+        string rawJson = '{"results":[{"somex":"somey"},{"somem":"somed"},{"somer":"somes"},{"somex":"somey"}],"blablabla":{"moreproperty":"totest"} }';
+        object result = JPath.get(rawJson, '/results[2]');
+      
+        system.assert(result instanceof map<string,object>,'should be a map');
+            
+        map<string,object> resultFromAnother = (map<string,object>)result;
+        
+        system.assert(resultFromAnother != null && resultFromAnother.containsKey('somem') && resultFromAnother.get('somem')=='somed','Should have brough second element of the "results" parent');
+                
+        
+        result = JPath.get(rawJson, '/results[3]');
+      
+        system.assert(result instanceof map<string,object>,'should be a map');
+            
+        resultFromAnother = (map<string,object>)result;
+        
+        system.assert(resultFromAnother != null && resultFromAnother.containsKey('somer') && resultFromAnother.get('somer')=='somes','Should have brough third element of the "results" parent');
+        
+        
+        result = JPath.get(rawJson, '/results[1]');
+      
+        system.assert(result instanceof map<string,object>,'should be a map');
+            
+        resultFromAnother = (map<string,object>)result;
+        
+        system.assert(resultFromAnother != null && resultFromAnother.containsKey('somex') && resultFromAnother.get('somex')=='somey','Should have brough first element of the "results" parent');
+        
+    }
+    
+    @IsTest
+    public static void SelectSingleElement(){
+        string rawJson = '{"info":{"statuscode":0,"copyright":{"text":"\u00A9 2016 MapQuest, Inc.","imageUrl":"http://api.mqcdn.com/res/mqlogo.gif","imageAltText":"\u00A9 2016 MapQuest, Inc."},"messages":[]},"options":{"maxResults":-1,"thumbMaps":true,"ignoreLatLngInput":false},"results":[{"providedLocation":{"location":"Santo Domingo, Republica Dominicana"},"locations":[{"street":"","adminArea6":"","adminArea6Type":"Neighborhood","adminArea5":"Santo Domingo","adminArea5Type":"City","adminArea4":"","adminArea4Type":"County","adminArea3":"DISTRITO NACIONAL","adminArea3Type":"State","adminArea1":"DO","adminArea1Type":"Country","postalCode":"","geocodeQualityCode":"A5XAX","geocodeQuality":"CITY","dragPoint":false,"sideOfStreet":"N","linkId":"282817645","unknownInput":"","type":"s","latLng":{"lat":18.463916,"lng":-69.894664},"displayLatLng":{"lat":18.463916,"lng":-69.894664},"mapUrl":"http://www.mapquestapi.com/staticmap/v4/getmap?key=xxxxx&type=map&size=225,160&pois=purple-1,18.463916,-69.894664,0,0,|&center=18.463916,-69.894664&zoom=12&rand=51595886"}]}]}';
+        
+        object result = JPath.get(rawJson,'/results[1]/locations[1]/latLng');
+        
+        system.assert(result instanceof map<string,object>,' shoud be a map ' + result);
+        
+        map<string,object> finalResult = (map<string,object>) result;
+        system.assert(finalResult.containsKey('lat'),'should contain lat ' + finalResult);
+        system.assert(finalResult.containsKey('lng'),'should contain lng '+ finalResult);
+        system.assert(finalResult.get('lat') == 18.463916,finalResult.get('lat'));
+        system.assert(finalResult.get('lng') == -69.894664,finalResult.get('lng'));
+        
+    } 
+   
+    @IsTest
+    public static void SelectSingleElementChildOfTheRootDoesNotReturnsIt(){
+         object result = JPath.get('{"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}}', '/results/another');
+       
+        system.assert(result == null,'Should not return');
+      
+    }
     
   
-    class JNode {
-        public object data;
-        public JNode parent;
-        public JNode (object d, JNode ancestor){
-            data = d; parent = ancestor;
-        }
-    }
-    
-    class JPathContext{
-        public list<string> targetPaths;
-        public list<string> transPaths;
-        public list<string> foundPaths;
-        public object data;
-        public string processingPath;
-        public string toSearch;
-		public string predicateToSearch;        
-        public boolean applyPredicate;
-        public integer positionPredicate;
-        
-        public JPathContext(){}
-        public JPathContext(string path){
-            if(path != null )
-                targetPaths = path.split('/');
-            
-            if(targetPaths.size() <= 0)
-                targetPaths.add(path);
-            else if(targetPaths.size() > 1 && targetPaths[0] == '')
-                targetPaths.remove(0);
-            
-            transPaths = targetPaths.clone();
-            foundPaths = new list<string>();
-            data = null;
-            processingPath = '';
-            toSearch = null;
-            applyPredicate = false;
-            positionPredicate = 0;
-                
-        }
-        public string popPath(){
-            string result = null;
-            if(transPaths != null && transPaths.size() > 0)
-            {
-                system.debug('target paths ' + targetPaths);
-                system.debug('trans paths ' + transPaths);
-                
-             	result = transPaths.remove(0);
-                
-                system.debug('poppath '+ result);
-                system.debug('trans paths '+transPaths);
-                system.debug('target paths ' + targetPaths);
-            } 
-            return result;
-        
-        }
-        public void cleanSearches(){
-             processingPath = '';
-            toSearch = null;
-            predicateToSearch = '';        
-            applyPredicate = false;
-            positionPredicate = 0;
-        
-        }
-        
-    }
-    
+    @IsTest
+    public static void SelectSingleElementChildOfTheRootDoesNotReturnsTooIt(){
+         object result = JPath.get('{"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}}', '/results[0]');
+   
+        system.assert(result == null,'Should not return');
+      
+    }  
 }
