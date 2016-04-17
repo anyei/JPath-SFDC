@@ -18,9 +18,9 @@ JPath is an attempt to create an useful tool for this purpose, the query pattern
 
 You may manually create the class within your org and copy paste the content of JPath class as for the JPath_Test. 
 
-### How to Use
-
-Querying Json Arrays
+### Usage
+_____
+Querying Json where Root element is an Array
 
 ```sh
 string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
@@ -59,7 +59,27 @@ In this example, the values "Avalue" and "Avalued" are selected, both values wer
  object result = jpathExec.get('/results/aField');
   ```
   Another variation is to create an instance of JPath and just call get, pretty much doing the same thing as if you call the static get method.
- 
+____
+Querying Json where Root is an Object
+
+```sh
+ string rawJson = ' {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple",[1,2,5,4],"yellow apple"]}] }';
+          
+          JPath jpathExec = new JPath(rawJson);
+          
+          object result = jpathExec.get('/results');
+      
+          system.assert(result instanceof List<object>,'should be a list ' + result);
+          
+          List<object> results = (List<Object>)result;
+          
+          system.assert(results != null && results.size() == 3,'Should bring 3 result ' + results);
+          
+
+```
+So the root element of the json data can also be an object not an array, the query will perform the same and the selection will be the same. In this example the root object containing a property called "results" which value is an array with three items.
+
+  
 #### JPath Class  
 ##### Instance Methods
 ###### get
