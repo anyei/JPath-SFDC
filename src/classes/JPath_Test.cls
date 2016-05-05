@@ -6,11 +6,79 @@
  * */
 @IsTest
 public class JPath_Test {
- 
+    
+    @IsTest
+      public static void SelectMultipleInstancePropertyWithPredicateRootArrayInstance(){
+          string rawJson = '[{"results":{"aField":"aValuedkdk"}}, {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple","Red Apple","yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"results":[{"aField":"Avalue1"},{"aField":"Avalue2"},{"aField":"Avalue3"}]},{"third":"objectx"} ]';
+        
+          JPath jpathExec = new JPath(rawJson);
+          
+          object result = jpathExec.get('/results[aField="Avalue2" || aField="Avalue3"]/aField');
+      
+          system.assert(result instanceof List<object>,'should be a list ' + result);
+      
+          List<object> results = (List<object>)result;
+          
+          system.assert(results != null && results.size() == 2 && results[0] == 'Avalue2' && results[1] == 'Avalue3' ,'Should bring 2 result ' + results + ' '+ results.size());
+          
+          
+    }
+    
+    
+    
+  @IsTest
+    public static void SelectSingleObjectRecordRootArray(){
+         string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple",[1,2,5,4],"yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
+        
+          JPath jpathExec = new JPath(rawJson);
+          
+          object result = jpathExec.get('/results[aField="Avalue"]');
+      
+          system.assert(result instanceof list<object>,'should be list ' + result);
+        
+          List<object> results = (List<object>) result;
+          
+          system.assert(results != null && results.size() ==1 ,'Should bring 1 result ' + results);
+    }
+
+    @IsTest
+      public static void SelectMultipleInstancePropertyMultiplePredicateRootObjectInstance(){
+          string rawJson = ' {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple",[1,2,5,4],"yellow apple"]}] }';
+          
+          JPath jpathExec = new JPath(rawJson);
+          
+          object result = jpathExec.get('/results');
+      
+          system.assert(result instanceof List<object>,'should be a list ' + result);
+          
+          List<object> results = (List<Object>)result;
+          
+          system.assert(results != null && results.size() == 3,'Should bring 3 result ' + results);
+          
+          
+    }
+    
+    
+     @IsTest
+      public static void SelectMultipleInstancePropertyMultiplePredicateRootArrayInstance(){
+          string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple",[1,2,5,4],"yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
+        
+          JPath jpathExec = new JPath(rawJson);
+          
+          object result = jpathExec.get('/results/listOfFruits[3]/[3]');
+      
+          system.assert(result instanceof integer,'should be an integer ' + result);
+          
+          system.assert(result != null && integer.valueof(result) == 5,'Should bring 1 result ' + result);
+          
+          
+    }
   
+    
+      
     @IsTest
       public static void SelectMultipleInstancePropertyNoPredicateRootArrayInstance(){
-          string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple","Red Apple","yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
+          string rawJson = '[{"results":{"aField":"aValuedkdk"}}, {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple","Red Apple","yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"results":[{"aField":"Avalue1"},{"aField":"Avalue2"},{"aField":"Avalue3"}]},{"third":"objectx"} ]';
         
           JPath jpathExec = new JPath(rawJson);
           
@@ -20,7 +88,7 @@ public class JPath_Test {
       
           List<object> results = (List<object>)result;
           
-          system.assert(results != null && results.size() == 2 && results[1] == 'aValued' ,'Should bring 2 result ' + results + ' '+ results.size());
+          system.assert(results != null && results.size() == 6 && results[0] == 'aValuedkdk' && results[1] == 'AValue'  && results[5] == 'Avalue3','Should bring 6 result ' + results + ' '+ results.size());
           
           
     }
@@ -43,7 +111,7 @@ public class JPath_Test {
     
      @IsTest
       public static void SelectSinglePropertyPredicateIndexRootArray(){
-          string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple","Red Apple","yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
+          string rawJson = '[{"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple","Red Apple","yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
         
         object result = JPath.get(rawJson, '/results/listOfFruits[2]');
       
@@ -99,7 +167,6 @@ public class JPath_Test {
           
           
     }
-    
     
     
      
@@ -223,6 +290,8 @@ public class JPath_Test {
     @IsTest
     public static void SelectFirstSecondAndThirdElementShouldReturnIt(){
         string rawJson = '{"results":[{"somex":"somey"},{"somem":"somed"},{"somer":"somes"},{"somex":"somey"}],"blablabla":{"moreproperty":"totest"} }';
+        
+        
         object result = JPath.get(rawJson, '/results[2]');
       
         system.assert(result instanceof map<string,object>,'should be a map');
@@ -282,5 +351,5 @@ public class JPath_Test {
    
         system.assert(result == null,'Should not return');
       
-    }  
+    } 
 }
