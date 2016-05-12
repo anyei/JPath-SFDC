@@ -1,5 +1,5 @@
 /*
- * Author : Angel Robles
+ * Author : Angel Robles (anyei)
  * Apex Class Tested: JPath
  * Purpose: Unit testing for JPath apex class. Should contain all the supported scenarios.
  * 
@@ -8,7 +8,7 @@
 public class JPath_Test {
     
      @IsTest
-      public static void SelectMultipleInstancePropertyWithPredicateAndRootArrayInstance(){
+      public static void SelectElementsInstancePropertyPredicateRootArray(){
           string rawJson = '[{"results":{"aField":"aValuedkdk"}}, {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple","Red Apple","yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"results":[{"aFieldx":"Avalue1","aField2":"Avalue2","aField3":"Avalue3"},{"aField1":"Avalue1","aField2":"Avalue2"},{"aField1":"Avalue1","aField":"Avalue2","aField3":"Avalue3"},{"aField1":"Avalue1","aField2":"Avalue2","aField3":"Avalue3"},{"aField1":"Avalue1","aField2":"Avalue2","aField3":"Avalue3"}]},{"third":"objectx"} ]';
         
           JPath jpathExec = new JPath(rawJson);
@@ -30,7 +30,7 @@ public class JPath_Test {
     }
     
     @IsTest
-      public static void SelectMultipleInstancePropertyWithPredicateRootArrayInstance(){
+      public static void SelectPropertyInstancePropertyPredicateRootArray(){
           string rawJson = '[{"results":{"aField":"aValuedkdk"}}, {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple","Red Apple","yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"results":[{"aField":"Avalue1"},{"aField":"Avalue2"},{"aField":"Avalue3"}]},{"third":"objectx"} ]';
         
           JPath jpathExec = new JPath(rawJson);
@@ -45,11 +45,9 @@ public class JPath_Test {
           
           
     }
-    
-    
-    
-  @IsTest
-    public static void SelectSingleObjectRecordRootArray(){
+      
+    @IsTest
+    public static void SelectOneElementInstancePropertyPredicateRootArray(){
          string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple",[1,2,5,4],"yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
         
           JPath jpathExec = new JPath(rawJson);
@@ -64,7 +62,7 @@ public class JPath_Test {
     }
 
     @IsTest
-      public static void SelectMultipleInstancePropertyMultiplePredicateRootObjectInstance(){
+    public static void SelectPropertyNoPredicatesRootObject(){
           string rawJson = ' {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple",[1,2,5,4],"yellow apple"]}] }';
           
           JPath jpathExec = new JPath(rawJson);
@@ -82,7 +80,7 @@ public class JPath_Test {
     
     
      @IsTest
-      public static void SelectMultipleInstancePropertyMultiplePredicateRootArrayInstance(){
+     public static void SelectElementsInstanceIndexPredicateRootArray(){
           string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple",[1,2,5,4],"yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
         
           JPath jpathExec = new JPath(rawJson);
@@ -95,11 +93,10 @@ public class JPath_Test {
           
           
     }
-  
-    
+      
       
     @IsTest
-      public static void SelectMultipleInstancePropertyNoPredicateRootArrayInstance(){
+     public static void SelectPropertyInstanceNoPredicateRootArray(){
           string rawJson = '[{"results":{"aField":"aValuedkdk"}}, {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple","Red Apple","yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"results":[{"aField":"Avalue1"},{"aField":"Avalue2"},{"aField":"Avalue3"}]},{"third":"objectx"} ]';
         
           JPath jpathExec = new JPath(rawJson);
@@ -117,7 +114,7 @@ public class JPath_Test {
     
     
     @IsTest
-      public static void SelectMultiplePropertyNoPredicateRootArray(){
+      public static void SelectPropertyStaticNoPredicateRootArray(){
           string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple","Red Apple","yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
         
           object result = JPath.get(rawJson, '/results/aField');
@@ -132,7 +129,7 @@ public class JPath_Test {
     }
     
      @IsTest
-      public static void SelectSinglePropertyPredicateIndexRootArray(){
+      public static void SelectElementStaticIndexPredicateRootArray(){
           string rawJson = '[{"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple","Red Apple","yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
         
         object result = JPath.get(rawJson, '/results/listOfFruits[2]');
@@ -144,8 +141,9 @@ public class JPath_Test {
           
     }
     
+    
      @IsTest
-      public static void SelectSingleElementByUsingPredicateIndexesInEveryPathArray(){
+      public static void SelectElementStaticIndexPredicateRootArrayAnotherVariation(){
           string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple","Red Apple","yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
         
         object result = JPath.get(rawJson, '/results[3]/listOfFruits[2]');
@@ -159,7 +157,7 @@ public class JPath_Test {
     
     
     @IsTest
-      public static void SelectSingleElementUsingIndexPredicateOnePathRootArray(){
+      public static void SelectElementStaticIndexPredicateRootArrayVariation(){
           string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"aField":"moreValues"}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
         
         object result = JPath.get(rawJson, '/results[3]');
@@ -176,7 +174,7 @@ public class JPath_Test {
     
      
      @IsTest
-      public static void SelectMultipleElementsOnePathNoPredicateRootArray(){
+      public static void SelectPropertyFromRootStaticNoPredicateRootArrayVariation(){
          string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
         
          object result = JPath.get(rawJson, '/results');
@@ -193,7 +191,7 @@ public class JPath_Test {
     
      
     @IsTest
-      public static void MultipleElementsUsingAttributeNamePredicateRootIsAList(){
+      public static void SelectPropertyFromRootStaticNoPredicateRootArrayAnotherVariation(){
           string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"third":"objectx"} ]';
         
         object result = JPath.get(rawJson, '/second');
@@ -208,7 +206,7 @@ public class JPath_Test {
    
  
     @IsTest
-      public static void SelectSingleElementUsingAttributeNamePredicateRootIsAList(){
+      public static void SelectPropertyFromRootStaticNoPredicateRootArrayVariationReturnsOne(){
           string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}},{"second":"object"},{"third":"objectx"} ]';
         
         object result = JPath.get(rawJson, '/second');
@@ -221,7 +219,7 @@ public class JPath_Test {
     }
    
   @IsTest
-      public static void SelectSingleElementUsingIndexPredicateRootIsAList(){
+      public static void SelectElementFromRootStaticIndexPredicateRootArray(){
           string rawJson = '[ {"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}},{"second":"object"},{"third":"object"} ]';
         
         object result = JPath.get(rawJson, '/[2]');
@@ -233,7 +231,7 @@ public class JPath_Test {
         system.assert(resultingObject != null && resultingObject.containsKey('second') && resultingObject.get('second') == 'object','Should bring second item from the root array');
     }   
     @IsTest
-    public static void SelectSingleElementFromTheRootReturnsIt(){
+    public static void SelectSingleElementFromRootNoPredicateReturnsItRootObject(){
         string rawJson = '{"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}}';
         
         object result = JPath.get(rawJson, '/results');
@@ -242,7 +240,7 @@ public class JPath_Test {
     }
    
     @IsTest
-    public static void SelectSingleElementSecondInTheRootReturnsIt(){
+    public static void SelectPropertyFromRootStaticNoPredicateRootObject(){
 		string rawJson = '{"results":[{"aField":"Avalue"},{"aField":"Avalue"}],"another":{"somef":"somed"}}';
 
         object result = JPath.get(rawJson, '/another');
@@ -255,7 +253,7 @@ public class JPath_Test {
         
     }
     @IsTest
-    public static void SelectSingleElementChildOfARootReturnsIt(){
+    public static void SelectPropertyFromInnerStaticNoPredicateRootObject(){
         object result = JPath.get('{"results":{"SecondResults":{"thirdResult":{"aFieldx":"aValueY"}}},"more":{"aField":"Avalue"},"another":{"somef":"somed"}}', '/results/SecondResults/thirdResult');
        
         system.assert(result instanceof map<string,object>,'should be a map');
@@ -267,7 +265,7 @@ public class JPath_Test {
     }
     
     @IsTest
-    public static void SelectMultipleElementsChildOfARootReturnsThem(){
+    public static void selectPropertyInnerFromRootStaticNoPredicateRootObject(){
         object result = JPath.get('{"results":{"SecondResults":{"thirdResult":[{"somex":"somey"},{"somex":"somey"},{"somex":"somey"},{"somex":"somey"}]}},"more":{"aField":"Avalue"},"another":{"somef":"somed"}}', '/results/SecondResults/thirdResult');
        
         system.assert(result instanceof list<object>,'should be a list');
