@@ -8,6 +8,78 @@
 public class JPath_Test {
     
      @IsTest
+      public static void SelectOneElementInstancePropertyPredicateWithoutFWDSLASHRootArray(){
+          string rawJson = '[{"results":{"aField":"aValuedkdk"}}, {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple","Red Apple","yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"results":[{"aFieldx":"Avalue1","aField2":"Avalue2","aField3":"Avalue3"},{"aField1":"Avalue1","aField2":"Avalue2"},{"aField1":"Avalue1","aField":"Avalue2","aField3":"Avalue3"},{"aField1":"Avalue1","aField2":"Avalue2","aField3":"Avalue3"},{"aField1":"Avalue1","aField2":"Avalue2","aField3":"Avalue3"}]},{"third":"objectx"} ]';
+        
+          JPath jpathExec = new JPath(rawJson);
+//(aField1="Avalue1" && ( (aField2="Avalue2" && aField3="Avalue3") || (aField3 ="Avalue3" && aField2="Avalue2") || (aField2="Avalue2") ) ) ||          
+          object records = jpathExec.get('results[(aField="aValuedkdk")]');
+      
+           system.assert(records instanceof List<object>,'should be a list ' + records);
+      
+          List<object> resultsx = (List<object>)records;
+          List<Map<string,object>> results = new List<Map<string,object>>();
+          for(object o : resultsx){
+              if(o instanceof  map<string,object>)
+                  results.add((map<string,object>)o);
+          }
+          
+          system.assert(results != null && results.size() == 1 ,'Should bring 1 result ' + results + ' '+ results.size());
+          system.assertEquals(results[0].get('aField'), 'aValuedkdk');
+          
+    }
+    
+    
+     @IsTest
+      public static void SelectOneElementInstancePropertyPredicateWithoutFWDSLASHPArenthesisRootArray(){
+          string rawJson = '[{"results":{"aField":"aValuedkdk"}}, {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple","Red Apple","yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"results":[{"aFieldx":"Avalue1","aField2":"Avalue2","aField3":"Avalue3"},{"aField1":"Avalue1","aField2":"Avalue2"},{"aField1":"Avalue1","aField":"Avalue2","aField3":"Avalue3"},{"aField1":"Avalue1","aField2":"Avalue2","aField3":"Avalue3"},{"aField1":"Avalue1","aField2":"Avalue2","aField3":"Avalue3"}]},{"third":"objectx"} ]';
+        
+          JPath jpathExec = new JPath(rawJson);
+//(aField1="Avalue1" && ( (aField2="Avalue2" && aField3="Avalue3") || (aField3 ="Avalue3" && aField2="Avalue2") || (aField2="Avalue2") ) ) ||          
+          object records = jpathExec.get('results[aField="aValuedkdk"]');
+      
+           system.assert(records instanceof List<object>,'should be a list ' + records);
+      
+          List<object> resultsx = (List<object>)records;
+          List<Map<string,object>> results = new List<Map<string,object>>();
+          for(object o : resultsx){
+              if(o instanceof  map<string,object>)
+                  results.add((map<string,object>)o);
+          }
+          
+          system.assert(results != null && results.size() == 1 ,'Should bring 1 result ' + results + ' '+ results.size());
+          system.assertEquals(results[0].get('aField'), 'aValuedkdk');
+          
+    }
+    
+    
+     @IsTest
+      public static void SelectElementsInstancePropertyPredicateWithoutFWDSLASHRootArray(){
+          string rawJson = '[{"results":{"aField":"aValuedkdk"}},{"results":[{"aFieldx":"Avalue1","aField2":"Avalue2","aField3":"Avalue3"},{"aField1":"Avalue1","aField2":"Avalue2"},{"aField1":"Avalue1","aField2":"Avalue2","aField3":"Avalue3"},{"aField1":"Avalue1","aField2":"Avalue2","aField3":"Avalue3"}]}]';
+        
+          JPath jpathExec = new JPath(rawJson);
+//(aField1="Avalue1" && ( (aField2="Avalue2" && aField3="Avalue3") || (aField3 ="Avalue3" && aField2="Avalue2") || (aField2="Avalue2") ) ) ||          
+          object records = jpathExec.get('/results[(aField1="Avalue1" && ( (aField2="Avalue2" && aField3="Avalue3") || (aField3 ="Avalue3" && aField2="Avalue2") || (aField2="Avalue2") ) ) || aField="aValuedkdk" ]');
+      
+          system.assert(records instanceof List<object>,'should be a list ' + records);
+      
+          List<object> resultsx = (List<object>)records;
+          List<Map<string,object>> results = new List<Map<string,object>>();
+          for(object o : resultsx){
+              if(o instanceof  map<string,object>)
+                  results.add((map<string,object>)o);
+          }
+          
+          system.assert(results != null && results.size() == 4 ,'Should bring 4 result ' + results + ' '+ results.size());
+          system.assertEquals(results[1].get('aField1'), 'Avalue1');
+          system.assertEquals(results[2].get('aField2'), 'Avalue2');
+          system.assertEquals(results[3].get('aField2'), 'Avalue2');
+          system.assertEquals(results[0].get('aField'), 'aValuedkdk');
+          
+    }
+    
+    
+     @IsTest
       public static void SelectElementsInstancePropertyPredicateRootArray(){
           string rawJson = '[{"results":{"aField":"aValuedkdk"}}, {"results":[{"aField":"Avalue"},{"aField":"Avalued"},{"listOfFruits":["apple","green apple","Red Apple","yellow apple"]}],"another":{"somef":"somed"}},{"second":"object"},{"second":"objecty"},{"second":"objectz"},{"second":"objectm"},{"results":[{"aFieldx":"Avalue1","aField2":"Avalue2","aField3":"Avalue3"},{"aField1":"Avalue1","aField2":"Avalue2"},{"aField1":"Avalue1","aField":"Avalue2","aField3":"Avalue3"},{"aField1":"Avalue1","aField2":"Avalue2","aField3":"Avalue3"},{"aField1":"Avalue1","aField2":"Avalue2","aField3":"Avalue3"}]},{"third":"objectx"} ]';
         
