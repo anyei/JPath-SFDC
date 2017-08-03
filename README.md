@@ -128,5 +128,6 @@ Please refer to the <a href="https://github.com/anyei/JPath-SFDC/issues">Issues<
 ### Pending
 1. Code is ugly and not optimal and undocumented, need to improve it so that its better and faster.2. 
 2. To do a good documentation, update the readme file to provide more explanation and create a wiki page.
+3. Not completed yet.
 
 
