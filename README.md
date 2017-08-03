@@ -119,7 +119,7 @@ Type of string, the well formed path or selector to get the json from the rawJso
 |:---------------------:|:------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------------------:|
 | property | ```/propertyName or /propertyName/AnotherProperty``` | Gets any value from the propertyName in any json record of the current path |
 | index predicate | ```/[1] or /propertyName[1] or  /propertyName[3]/[4] or /propertyName/[4]/someMore/[1]```  and so on.. | It is not zero based index, 1 means first record. Gets only a single element from the specific path of the json record.  |
-| conditional predicate | ```/[aField="aValue"] or /property[aField="aValue" &#124;&#124;  aField="aValue2"] or /property[aField="Avalue"]/property2 or /property[aField="aValue" && Afield2="AValue"]/[aField="aValue"] ``` | Simple filters to norrow down the elements selected, operators supported are : ```&&, &#124;&#124;, <, >, <=, >=, =, != ```|
+| conditional predicate | <code>/[aField="aValue"] or /property[aField="aValue" &#124;&#124;  aField="aValue2"] or /property[aField="Avalue"]/property2 or /property[aField="aValue" && Afield2="AValue"]/[aField="aValue"]</code> | Simple filters to norrow down the elements selected, operators supported are : <code>&&, &#124;&#124;, <, >, <=, >=, =, != </code>|
 |  |  |  |
 
 ### Issues
