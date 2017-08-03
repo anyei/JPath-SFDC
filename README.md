@@ -117,9 +117,9 @@ Type of string, the well formed path or selector to get the json from the rawJso
 #### JPath Supported Selectors
 | JPath Selectors Types | Usage | Description |
 |:---------------------:|:------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------------------:|
-| property | ```/propertyName or /propertyName/AnotherProperty``` | Gets any value from the propertyName in any json record of the current path |
-| index predicate | * <code>/[1]</code> * <code>/propertyName[1]</code> * <code>/propertyName[3]/[4]</code> * <code>/propertyName/[4]/someMore/[1]</code>  and so on.. | It is not zero based index, 1 means first record. Gets only a single element from the specific path of the json record.  |
-| conditional predicate | <code>/[aField="aValue"] or /property[aField="aValue" &#124;&#124;  aField="aValue2"] or /property[aField="Avalue"]/property2 or /property[aField="aValue" && Afield2="AValue"]/[aField="aValue"]</code> | Simple filters to norrow down the elements selected, operators supported are : <code>&&, &#124;&#124;, <, >, <=, >=, =, != </code>|
+| property | <ul><li><code>/propertyName</code></li><li><code>/propertyName/AnotherProperty</code></li></ul> | Gets any value from the propertyName in any json record of the current path |
+| index predicate | <ul><li><code>/[1]</code></li><li><code>/propertyName[1]</code></li><li><code>/propertyName[3]/[4]</code></li><li><code>/propertyName/[4]/someMore/[1]</code></li><li>and so on..</li></ul> | It is not zero based index, 1 means first record. Gets only a single element from the specific path of the json record.  |
+| conditional predicate | <ul><li><code>/[aField="aValue"]</code></li><li><code>/property[aField="aValue" &#124;&#124;  aField="aValue2"]</code></li><li><code>/property[aField="Avalue"]/property2</code></li><li><code>/property[aField="aValue" && Afield2="AValue"]/[aField="aValue"]</code></li><ul> | Simple filters to norrow down the elements selected, operators supported are : <code>&&, &#124;&#124;, <, >, <=, >=, =, != </code>|
 |  |  |  |
 
 ### Issues
